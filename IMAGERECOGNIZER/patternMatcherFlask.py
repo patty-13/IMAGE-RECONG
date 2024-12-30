@@ -181,11 +181,11 @@ class sequenceFinder:
 
     def store_plots(self, data, matchNumber):
         row_data = []
-        plot_dir = 'D:\pycharm_projects\CLEARAIMODELS\IMAGERECOGNIZER\PLOT_IMAGES_1'
+        plot_dir = r'D:\pycharm_projects\CLEARAIMODELS\IMAGERECOGNIZER\PLOT_IMAGE_1'
         # dataFile = os.path.join(self.data_file, f'@ENQ_M{self.timeFrame}.csv')
 
         # complete_chart = pd.read_csv(dataFile, sep='\t').pipe(self.preprocess)
-        complete_chart= pd.read_csv('D:/pycharm_projects/CLEARAIMODELS/IMAGERECOGNIZER/@ENQ_M1.csv').pipe(self.preprocess)
+        complete_chart= pd.read_csv('D:/pycharm_projects/CLEARAIMODELS/IMAGERECOGNIZER/@ENQ_M1.csv', sep='\t').pipe(self.preprocess)
         for i, entry in enumerate(data[:matchNumber]):  # Top 5 results
 
             # defining paths
@@ -196,6 +196,10 @@ class sequenceFinder:
             self.ST = entry['start_time']
             self.ET = entry['end_time']
             ochl_avg_list = eval(entry['ochl_avg'])
+            print(f"DATE: {entry['date']}")
+            print(f"ST : {entry['start_time']}")
+            print(f"ET : {entry['end_time']}")
+            print(f"DTW : {entry['dtw_distance']}")
 
             if self.timeFrame == 1:
                 self.splitVal = int(self.startTime * 60)
@@ -210,8 +214,11 @@ class sequenceFinder:
             #saving subplots
             self.createSubPlots(x_values, y_values, match_plot_path)
             # saving complete chart
+            print(f"COMPLTE_CHART : {complete_chart}")
             sub_chart = complete_chart[complete_chart['date'] == entry['date']].reset_index(drop=True)
+            print(f"SUB CHART : {sub_chart}")
             self.createCompletePlot(sub_chart, complete_plot_path)
+
 
             # Information column
             info = (
@@ -236,7 +243,7 @@ class sequenceFinder:
         # row_data_df.to_csv(os.path.join(self.plot_dir, 'image_data.csv'), index=False)
 
     def createSubPlots(self, x_data, y_data, plot_path):
-        fig, ax = plt.subplots(figsiz=(5, 5), dpi=100)
+        fig, ax = plt.subplots(figsize=(5, 5), dpi=100)
         ax.plot(x_data, y_data, label='ochl_avg')
         ax.set_xlabel('Time')
         ax.set_ylabel('Value')
@@ -265,7 +272,7 @@ class sequenceFinder:
                 )
             ],
             xaxis_rangeslider_visible=False,  # Disable the range slider
-            title=title,
+
             width=800,  # Set the width of the chart
             height=600  # Set the height of the chart
         )
